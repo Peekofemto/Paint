@@ -17,13 +17,13 @@ namespace Paint
         public formPrincipal()
         {
             InitializeComponent();
-            
-
         }
+
+        Bitmap imagen;
 
         private void formPrincipal_Load(object sender, EventArgs e)
         {
-
+            imagen = new Bitmap(panel1.ClientSize.Width, panel1.ClientSize.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
         }
 
 
@@ -57,7 +57,8 @@ namespace Paint
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = panel1.CreateGraphics();
+            e.Graphics.DrawImage(imagen, 0, 0, imagen.Width, imagen.Height);
+           
  
         }
 
@@ -84,15 +85,18 @@ namespace Paint
 
         private void btnLinea_Click(object sender, EventArgs e)
         {
+            
             //Por alguna razón hay un desfase en los puntos y lo tuve que compensar, wth?
             point1.X = point1.X - 100;
             point1.Y = point1.Y - 25;
             point2.X = point2.X - 100;
             point2.Y = point2.Y - 25;
-            using (Graphics g = panel1.CreateGraphics())
-            {
-                g.DrawLine(new Pen(ColorBorde, 3), point1, point2);
-            }
+            Graphics g = Graphics.FromImage(imagen);
+            
+            g.DrawLine(new Pen(ColorBorde, 3), point1, point2);
+            panel1.Invalidate();
+            
+            
         }
 
         Point point1;
@@ -116,6 +120,11 @@ namespace Paint
             {
                 noPuntos = 0;
             }
+        }
+
+        private void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            panel1.Invalidate();
         }
     }
 }
